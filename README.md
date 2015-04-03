@@ -5,5 +5,5 @@ It allows you to discover step by step application new Go features as applicatio
 Each step is a tag "Step \# : description of step with features introduced"
 
 Features :
-List of cities can be found by ...
+dummy-weather --help to find out how to use dummy-weather
 
