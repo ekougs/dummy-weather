@@ -1,6 +1,7 @@
 # Dummy Weather
 
 A Go language simple demo application simulating a weather station for some cities.
+Compatible with Go 1.4 as some features have been introduced in this version.
 It allows you to discover step by step new Go features as application grows.
 Each step is a tag "Step \# : description of step with features introduced"
 
