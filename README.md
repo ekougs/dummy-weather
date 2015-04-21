@@ -9,4 +9,3 @@ To build the application, you should run `make` command.
 It will install in the bin dir of your GOPATH, the installation directory with the application at its root.
 
 dummy-weather --help to find out how to use dummy-weather
-
