@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PascalEkouaghe/dummy-weather/util"
+	"github.com/ekougs/dummy-weather/util"
 )
 
 type tempTime time.Time

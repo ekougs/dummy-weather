@@ -90,9 +90,9 @@ func getSampleTime(requestTime time.Time) time.Time {
 	} else if day%10 != 0 {
 		day = i * 10
 	}
-	return timeAtEleven(day, requestTime)
+	return timeIn2014AtEleven(day, requestTime)
 }
 
-func timeAtEleven(day int, requestTime time.Time) time.Time {
-	return time.Date(requestTime.Year(), requestTime.Month(), day, 11, 0, 0, 0, requestTime.Location())
+func timeIn2014AtEleven(day int, requestTime time.Time) time.Time {
+	return time.Date(2014, requestTime.Month(), day, 11, 0, 0, 0, requestTime.Location())
 }

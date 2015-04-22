@@ -203,3 +203,18 @@ func fileExists(fileName string) bool {
 	}
 	return true
 }
+
+// Len provided to implement sort.Interface
+func (cities Cities) Len() int {
+	return len(cities)
+}
+
+// Less provided to implement sort.Interface
+func (cities Cities) Less(i, j int) bool {
+	return cities[i].Name <= cities[j].Name
+}
+
+// Swap provided to implement sort.Interface
+func (cities Cities) Swap(i, j int) {
+	cities[i], cities[j] = cities[j], cities[i]
+}
