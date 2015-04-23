@@ -111,6 +111,7 @@ func (utils DataUtils) getTemp(city string, requestTime time.Time) (int, error) 
 	}
 	temps := temps{}
 	decoder.Decode(&temps)
+	utils.tempsByCity[cityFile] = temps
 	for _, temp := range temps {
 		if temp.Time.Equal(requestTime) {
 			return temp.Temp, nil
@@ -120,7 +121,7 @@ func (utils DataUtils) getTemp(city string, requestTime time.Time) (int, error) 
 	return 0, fmt.Errorf("Value has not been generated yet for %s, %s", city, requestTime)
 }
 
-func (utils DataUtils) setTemp(temp int, city string, requestTime time.Time) error {
+func (utils DataUtils) saveTemp(temp int, city string, requestTime time.Time) error {
 	cityFile, err := utils.getCityFileName(city)
 	if err != nil {
 		return err
@@ -132,10 +133,10 @@ func (utils DataUtils) setTemp(temp int, city string, requestTime time.Time) err
 		}
 		cityTemps = temps{}
 	} else {
-		cityTemps = utils.tempsByCity[city]
+		cityTemps = utils.tempsByCity[cityFile]
 	}
 	cityTemps = append(cityTemps, Temp{requestTime, temp})
-	utils.tempsByCity[city] = cityTemps
+	utils.tempsByCity[cityFile] = cityTemps
 	var encoder *json.Encoder
 	encoder, err = getJSONEncoder(cityFile)
 	if err != nil {

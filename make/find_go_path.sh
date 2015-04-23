@@ -5,6 +5,12 @@ gopaths=$GOPATH
 delimiter=":"
 relevant_gopath=""
 
+if [[ "$gopaths" != *"$delimiter"* ]]
+then
+	echo $gopaths
+	exit 0
+fi
+
 while [[ "$gopaths" == *"$delimiter"* ]]
 do
 	current_gopath=${gopaths#*${delimiter}}

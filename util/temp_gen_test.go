@@ -85,3 +85,55 @@ func TestShouldReturnSameTempFor2CallsWithSameParametersAfterDayLightSavingTimeI
 		t.Errorf("Value should be generated only once. First temp %d should be equal to second %d", temp1, temp2)
 	}
 }
+
+func TestGetForDatesWithNormalPeriod(t *testing.T) {
+	location, _ := time.LoadLocation("Africa/Dakar")
+	timesChan, err := utils.GetDatesForPeriod(time.Date(2013, 4, 16, 10, 00, 00, 00, location), "5D")
+	if err != nil {
+		t.Error(err)
+	}
+	actualTemps := tempProvider.GetForDates("DKR", timesChan)
+	if 6 != len(actualTemps.Temps) {
+		t.Errorf("We should get exactly 6 temps for provided period %v", actualTemps)
+	}
+	if len(actualTemps.Temps) < 1 || actualTemps.Temps[0].City != "DKR" {
+		t.Errorf("Temps should be for DKR")
+	}
+	min, max, avg := tempProvider.stats(actualTemps.Temps)
+	if actualTemps.Min != min || actualTemps.Max != max || actualTemps.Average != int(avg) {
+		t.Errorf("Computed min %d, max %d or avg %d should not be different from %d, %d, %d", actualTemps.Min, actualTemps.Max, actualTemps.Average, min, max, avg)
+	}
+}
+
+func TestGetForDatesWithSingleDatePeriod(t *testing.T) {
+	location, _ := time.LoadLocation("Africa/Dakar")
+	timesChan, err := utils.GetDatesForPeriod(time.Date(2013, 4, 16, 10, 00, 00, 00, location), "0D")
+	if err != nil {
+		t.Error(err)
+	}
+	actualTemps := tempProvider.GetForDates("DKR", timesChan)
+	if 1 != len(actualTemps.Temps) {
+		t.Errorf("We should get exactly 1 temp for provided period %v", actualTemps)
+	}
+	if len(actualTemps.Temps) < 1 || actualTemps.Temps[0].City != "DKR" {
+		t.Errorf("Temps should be for DKR")
+	}
+	soleTemp := actualTemps.Temps[0].Temp
+	if actualTemps.Min != soleTemp || actualTemps.Max != soleTemp || actualTemps.Average != soleTemp {
+		t.Errorf("Min %d, max %d or avg %d should not be different from temp requested %d", actualTemps.Min, actualTemps.Max, actualTemps.Average, soleTemp)
+	}
+}
+
+func TestStats(t *testing.T) {
+	temps := []CityTemp{CityTemp{Temp: 1}, CityTemp{Temp: 2}, CityTemp{Temp: 3}, CityTemp{Temp: 4}, CityTemp{Temp: 5}}
+	min, max, avg := tempProvider.stats(temps)
+	if min != 1 {
+		t.Errorf("Min %d should be equal to 1", min)
+	}
+	if max != 5 {
+		t.Errorf("Max %d should be equal to 5", max)
+	}
+	if avg != 3 {
+		t.Errorf("Average %d should be equal to 3", avg)
+	}
+}
