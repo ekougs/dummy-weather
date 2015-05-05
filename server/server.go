@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -11,7 +12,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var stopPwd = "Gophers$ince2014"
+var (
+	stopPwd     = "Gophers$ince2014"
+	defaultPort = 1987
+)
 
 // WeatherServer provides HTTP access to all features available from the CLI
 type WeatherServer struct {
@@ -28,10 +32,12 @@ func NewWeatherServer(tempProvider util.TempProvider, timeUtils util.TimeUtils, 
 // LaunchServer launch an HTTP server which offers all features offered by CLI
 func (server WeatherServer) LaunchServer() {
 	router := mux.NewRouter().StrictSlash(true)
-	fmt.Println("Launching HTTP server...")
+	fmt.Println(fmt.Sprintf("Launching HTTP server at 127.0.0.1:%v", defaultPort))
 	router.HandleFunc("/cities", server.handleCityRequest).Methods("GET")
 	router.HandleFunc("/cities/{city}/temps", server.handleTempRequest).Methods("GET")
-	http.ListenAndServe(":1987", router)
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", defaultPort), router); err != nil {
+		log.Fatal("ListenAndServe", err)
+	}
 }
 
 func handler(supportedMethod string, handler func(writer http.ResponseWriter, request *http.Request)) func(writer http.ResponseWriter, request *http.Request) {
