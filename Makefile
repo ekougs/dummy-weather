@@ -13,7 +13,7 @@ pkg_dummy_weather:dummy_weather pkg_resources
 pkg_resources:
 	@echo "Packaging resources..."
 	@mkdir -p $(BUILD_RESOURCES_DIR)
-	@cp -r resources/ $(BUILD_RESOURCES_DIR)
+	@cp -r resources/* $(BUILD_RESOURCES_DIR)
 
 dummy_weather: dummy_weather.go test
 	@echo "Building exec..."
